@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "jsx": "react",
+        "reactNamespace": "b"
+    },
+    "compileOnSave": false,
+    "files": [
+        "dist/index.d.ts",
+        "node_modules/bobril/jsx.d.ts",
+        "src/index.ts",
+        "src/typings/commander/commander.d.ts",
+        "src/typings/node/node.d.ts"
+    ]
+}
