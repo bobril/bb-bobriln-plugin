@@ -62,7 +62,7 @@ export class AndroidDevice implements dev.IDevice {
         return this.platform.compileCode(release).then((apkfile) => {
             return spawnAsync((line) => {
                 if (this.logcb) this.logcb(line);
-            }, androidHome.getAdbPath(), ["-s", this.id, "install", "-r", "-d", apkfile]);
+            }, androidHome.getAdbPath(), ["-s", this.id, "install", "-r", apkfile]);
         }).then(() => {
             if (andRun) {
                 return spawnAsync((line) => {

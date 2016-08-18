@@ -55,7 +55,7 @@ class AndroidDevice {
             return spawn_1.spawnAsync((line) => {
                 if (this.logcb)
                     this.logcb(line);
-            }, androidHome.getAdbPath(), ["-s", this.id, "install", "-r", "-d", apkfile]);
+            }, androidHome.getAdbPath(), ["-s", this.id, "install", "-r", apkfile]);
         }).then(() => {
             if (andRun) {
                 return spawn_1.spawnAsync((line) => {
