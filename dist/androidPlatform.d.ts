@@ -11,6 +11,7 @@ export declare class AndroidPlatform implements dev.IPlatform {
     removeCode(): Promise<void>;
     prepareCode(): Promise<void>;
     packageName(): string;
-    compileCode(release: boolean): Promise<string>;
+    compiledPackageName(release: boolean): string;
+    compileCode(release: boolean): Promise<void>;
 }
 export declare const instance: AndroidPlatform;

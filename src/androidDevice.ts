@@ -58,17 +58,25 @@ export class AndroidDevice implements dev.IDevice {
         this.logcb = cb;
     }
 
-    install(release: boolean, andRun: boolean): Promise<void> {
-        return this.platform.compileCode(release).then((apkfile) => {
+    installDebug(): Promise<void> {
+        return this.platform.compileCode(false).then(() => {
             return spawnAsync((line) => {
                 if (this.logcb) this.logcb(line);
-            }, androidHome.getAdbPath(), ["-s", this.id, "install", "-r", apkfile]);
-        }).then(() => {
-            if (andRun) {
-                return spawnAsync((line) => {
-                    if (this.logcb) this.logcb(line);
-                }, androidHome.getAdbPath(), ["-s", this.id, "shell", "monkey", "-p", (this.platform as AndroidPlatform).packageName(), "1"]).then(() => { });
-            }
+            }, androidHome.getAdbPath(), ["-s", this.id, "install", "-r", this.platform.compiledPackageName(false)]).then((code) => {
+                if (code != 0) throw new Error("Installing package to device failed");
+            });
+        });
+    }
+
+    buildRelease(): Promise<void> {
+        return this.platform.compileCode(true);
+    }
+
+    justRunDebug(): Promise<void> {
+        return spawnAsync((line) => {
+            if (this.logcb) this.logcb(line);
+        }, androidHome.getAdbPath(), ["-s", this.id, "shell", "monkey", "-p", (this.platform as AndroidPlatform).packageName(), "1"]).then((code) => {
+            if (code != 0) throw new Error("Running app on device failed");
         });
     }
 }

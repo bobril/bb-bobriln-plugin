@@ -12,6 +12,10 @@ function afterInteractiveCompile() {
     }
 }
 exports.afterInteractiveCompile = afterInteractiveCompile;
+function updateWatchPaths(paths) {
+    paths.push("!/android/**");
+}
+exports.updateWatchPaths = updateWatchPaths;
 function device2actionId(device) {
     if (device == null)
         return null;
@@ -25,10 +29,14 @@ function actionId2device(actionId) {
 function registerActions(actions) {
     if (!enabled_1.isEnabled())
         return;
-    actions.registerCommand("bn.prepareCode.android", "Prepare Android Code");
+    actions.registerCommand("bn.prepareCode.android", "Repave Android Code");
     actions.registerCommand("bn.detectDevices", "Refresh devices");
     actions.registerCombo("Device", device2actionId(deviceList.deviceList.getSelected()), deviceList.deviceList.getList().map((d) => actions.option(device2actionId(d), d.name)));
     actions.registerCommand("bn.installAndRun", deviceList.deviceList.getSelected() != null ? "Run" : "Assemble");
+    if (deviceList.deviceList.getSelected() != null) {
+        actions.registerCommand("bn.justRunDebug", "Just Run");
+    }
+    actions.registerCommand("bn.buildRelease", "Build Release");
 }
 exports.registerActions = registerActions;
 function setConsoleLogger() {
@@ -58,12 +66,26 @@ function invokeAction(id) {
                 device = null;
             if (device != null) {
                 device.updateByProject(bb.getProject());
-                return device.install(false, true);
+                return device.installDebug().then(() => device.justRunDebug());
             }
             else {
                 androidPlatform.instance.updateByProject(bb.getProject());
                 return androidPlatform.instance.compileCode(false).then(() => { });
             }
+        }
+        case "bn.justRunDebug": {
+            let device = deviceList.deviceList.getSelected();
+            if (device != null && device.status != dev.DeviceStatus.Online)
+                device = null;
+            if (device != null) {
+                return device.justRunDebug();
+            }
+            return;
+        }
+        case "bn.buildRelease": {
+            setConsoleLogger();
+            androidPlatform.instance.updateByProject(bb.getProject());
+            return androidPlatform.instance.compileCode(true);
         }
     }
 }

@@ -50,19 +50,27 @@ class AndroidDevice {
     logCallback(cb) {
         this.logcb = cb;
     }
-    install(release, andRun) {
-        return this.platform.compileCode(release).then((apkfile) => {
+    installDebug() {
+        return this.platform.compileCode(false).then(() => {
             return spawn_1.spawnAsync((line) => {
                 if (this.logcb)
                     this.logcb(line);
-            }, androidHome.getAdbPath(), ["-s", this.id, "install", "-r", apkfile]);
-        }).then(() => {
-            if (andRun) {
-                return spawn_1.spawnAsync((line) => {
-                    if (this.logcb)
-                        this.logcb(line);
-                }, androidHome.getAdbPath(), ["-s", this.id, "shell", "monkey", "-p", this.platform.packageName(), "1"]).then(() => { });
-            }
+            }, androidHome.getAdbPath(), ["-s", this.id, "install", "-r", this.platform.compiledPackageName(false)]).then((code) => {
+                if (code != 0)
+                    throw new Error("Installing package to device failed");
+            });
+        });
+    }
+    buildRelease() {
+        return this.platform.compileCode(true);
+    }
+    justRunDebug() {
+        return spawn_1.spawnAsync((line) => {
+            if (this.logcb)
+                this.logcb(line);
+        }, androidHome.getAdbPath(), ["-s", this.id, "shell", "monkey", "-p", this.platform.packageName(), "1"]).then((code) => {
+            if (code != 0)
+                throw new Error("Running app on device failed");
         });
     }
 }

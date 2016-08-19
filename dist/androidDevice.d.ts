@@ -11,5 +11,7 @@ export declare class AndroidDevice implements dev.IDevice {
     checkStatus(): void;
     updateByProject(project: bb.IProject): void;
     logCallback(cb?: (text: string) => void): void;
-    install(release: boolean, andRun: boolean): Promise<void>;
+    installDebug(): Promise<void>;
+    buildRelease(): Promise<void>;
+    justRunDebug(): Promise<void>;
 }

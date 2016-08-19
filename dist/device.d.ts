@@ -13,7 +13,9 @@ export interface IDevice {
     status: DeviceStatus;
     updateByProject(project: bb.IProject): any;
     logCallback(cb?: (text: string) => void): any;
-    install(release: boolean, andRun: boolean): Promise<void>;
+    installDebug(): Promise<void>;
+    buildRelease(): Promise<void>;
+    justRunDebug(): Promise<void>;
 }
 export interface IPlatform {
     platform: DevicePlatform;
@@ -21,5 +23,6 @@ export interface IPlatform {
     logCallback(cb?: (text: string) => void): any;
     removeCode(): Promise<void>;
     prepareCode(): Promise<void>;
-    compileCode(release: boolean): Promise<string>;
+    compiledPackageName(release: boolean): string;
+    compileCode(release: boolean): Promise<void>;
 }
