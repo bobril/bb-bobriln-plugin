@@ -1,4 +1,5 @@
 "use strict";
+const bb = require("bobril-build");
 const dev = require("./device");
 const pathPlatformDependent = require("path");
 const path = pathPlatformDependent.posix; // This works everythere, just use forward slashes
@@ -53,6 +54,27 @@ public final class BobrilnConfig {
             let content = fs.readFileSync(path.join(this.project.dir, "android/app/build.gradle"), "utf-8");
             content = content.replace(/applicationId \".+\"/, `applicationId "${this.packageName()}"`);
         });
+        if (release) {
+            let assetsDir = path.join(this.projectPlatformDir(), "app/src/main/assets");
+            fs.emptyDirSync(assetsDir);
+            let compileProcess = bb.startCompileProcess(bb.curProjectDir);
+            prom = prom.then(() => compileProcess.refresh(null).then(() => {
+                let proj = {};
+                bb.presetReleaseProject(proj);
+                proj.defines["BobrilnPlatform"] = dev.DevicePlatform[this.platform];
+                return compileProcess.setOptions(proj);
+            }).then((opts) => {
+                return compileProcess.installDependencies().then(() => opts);
+            }).then((opts) => {
+                return compileProcess.callPlugins(bb.EntryMethodType.afterStartCompileProcess);
+            }).then((opts) => {
+                return compileProcess.loadTranslations();
+            }).then((opts) => {
+                return compileProcess.compile((name, content) => {
+                    fs.outputFileSync(path.join(assetsDir, name), content);
+                });
+            })).then(() => undefined);
+        }
         prom = prom.then(() => {
             return spawn_1.spawnAsync((line) => {
                 if (this.logcb)
