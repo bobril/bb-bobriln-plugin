@@ -4,6 +4,7 @@ const androidPlatform = require('./androidPlatform');
 const enabled_1 = require('./enabled');
 const dev = require("./device");
 const deviceList = require('./deviceList');
+const initCommand_1 = require('./initCommand');
 let first = true;
 function afterInteractiveCompile() {
     if (enabled_1.isEnabled() && first) {
@@ -95,10 +96,13 @@ function registerCommands(c, _bb, consumeCommand) {
         .command("bobriln")
         .alias("n")
         .description("Bobriln commands")
-        .option("-i, --init <name>", "Create Bobril Native application in current directory")
+        .option("-i, --init", "Create Bobril Native application in current directory")
         .action((c) => {
         consumeCommand();
-        console.log("Running native");
+        if ("init" in c) {
+            initCommand_1.initCommand();
+            return;
+        }
     });
     bb.invalidateActions();
 }

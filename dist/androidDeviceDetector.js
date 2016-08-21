@@ -8,7 +8,7 @@ const spawn_1 = require("./spawn");
 function androidDeviceDetector() {
     try {
         let command = androidHome.getAdbPath();
-        spawn_1.spawnAsync((line) => {
+        return spawn_1.spawnAsync((line) => {
             let m = /^(.*?)\s+device\sproduct:(.*?)\smodel:(.*?)\sdevice:(.*?)$/.exec(line);
             if (m) {
                 let id = m[1];
@@ -20,10 +20,10 @@ function androidDeviceDetector() {
                     deviceList.deviceList.add(new androidDevice.AndroidDevice(androidPlatform.instance, id, `Android ${product}-${model}-${deviceName}`));
                 }
             }
-        }, command, ["devices", "-l"]);
+        }, command, ["devices", "-l"]).then(() => { });
     }
     catch (err) {
-        console.log(err);
+        return Promise.reject(err);
     }
 }
 exports.androidDeviceDetector = androidDeviceDetector;

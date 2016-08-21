@@ -4,6 +4,7 @@ import * as androidPlatform from './androidPlatform';
 import { isEnabled } from './enabled';
 import * as dev from "./device";
 import * as deviceList from './deviceList';
+import { initCommand } from './initCommand';
 
 let first = true;
 
@@ -41,8 +42,8 @@ export function registerActions(actions: bb.IActionsRegistry) {
 }
 
 function setConsoleLogger() {
-    deviceList.deviceList.getList().forEach((d)=>d.logCallback((t)=>console.log(t)));
-    androidPlatform.instance.logCallback((t)=>console.log(t));
+    deviceList.deviceList.getList().forEach((d) => d.logCallback((t) => console.log(t)));
+    androidPlatform.instance.logCallback((t) => console.log(t));
 }
 
 export function invokeAction(id: string): Promise<void> {
@@ -68,10 +69,10 @@ export function invokeAction(id: string): Promise<void> {
                 device = null;
             if (device != null) {
                 device.updateByProject(bb.getProject());
-                return device.installDebug().then(()=>device.justRunDebug());
+                return device.installDebug().then(() => device.justRunDebug());
             } else {
                 androidPlatform.instance.updateByProject(bb.getProject());
-                return androidPlatform.instance.compileCode(false).then(()=>{});
+                return androidPlatform.instance.compileCode(false).then(() => { });
             }
         }
         case "bn.justRunDebug": {
@@ -80,7 +81,7 @@ export function invokeAction(id: string): Promise<void> {
                 device = null;
             if (device != null) {
                 return device.justRunDebug();
-            } 
+            }
             return;
         }
         case "bn.buildRelease": {
@@ -96,12 +97,13 @@ export function registerCommands(c: commander.ICommand, _bb: any, consumeCommand
         .command("bobriln")
         .alias("n")
         .description("Bobriln commands")
-        .option("-i, --init <name>", "Create Bobril Native application in current directory")
-        //.option("-d, --deploy", "Deploy result to device/emulator")
-        //.option("-b, --build", "Build for deployment to device")
+        .option("-i, --init", "Create Bobril Native application in current directory")
         .action((c) => {
             consumeCommand();
-            console.log("Running native");
+            if ("init" in c) {
+                initCommand();
+                return;
+            }
         });
     bb.invalidateActions();
 }

@@ -11,6 +11,9 @@ export declare class AndroidDevice implements dev.IDevice {
     checkStatus(): void;
     updateByProject(project: bb.IProject): void;
     logCallback(cb?: (text: string) => void): void;
+    spawnAdb(params: string[], cb?: (line: string) => void): Promise<number>;
+    spawnAdbShell(params: string[], cb?: (line: string) => void): Promise<number>;
+    installRaw(packagePath: string, packageId: string): Promise<void>;
     installDebug(): Promise<void>;
     buildRelease(): Promise<void>;
     justRunDebug(): Promise<void>;

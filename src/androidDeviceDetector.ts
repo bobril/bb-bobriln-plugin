@@ -7,10 +7,10 @@ import * as androidPlatform from "./androidPlatform";
 
 import { spawnAsync } from "./spawn";
 
-export function androidDeviceDetector() {
+export function androidDeviceDetector(): Promise<void> {
     try {
         let command = androidHome.getAdbPath();
-        spawnAsync((line) => {
+        return spawnAsync((line) => {
             let m = /^(.*?)\s+device\sproduct:(.*?)\smodel:(.*?)\sdevice:(.*?)$/.exec(line);
             if (m) {
                 let id = m[1];
@@ -22,9 +22,9 @@ export function androidDeviceDetector() {
                     deviceList.deviceList.add(new androidDevice.AndroidDevice(androidPlatform.instance, id, `Android ${product}-${model}-${deviceName}`));
                 }
             }
-        }, command, ["devices", "-l"]);
+        }, command, ["devices", "-l"]).then(()=>{});
     }
     catch (err) {
-        console.log(err);
+        return Promise.reject(err);
     }
 }

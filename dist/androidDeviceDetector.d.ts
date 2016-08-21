@@ -1,1 +1,1 @@
-export declare function androidDeviceDetector(): void;
+export declare function androidDeviceDetector(): Promise<void>;
