@@ -19,7 +19,7 @@ b.init(() => {
         tag: "View", children: [
             b.style({ tag: "Text", children: "Fps: " + fps.toFixed(1) + " Frame: " + b.frame() }, { flex: 1, background: "powderblue" }),
             b.style({ tag: "Text", children: "Quickly shake device to see debug menu" }, { flex: 2, background: "skyblue" }),
-            b.style({ tag: "Text", children: "Bobril Native " + b.platformName }, { flex: 3, background: "steelblue" }),
+            b.style({ tag: "Text", children: "Bobril Native " + b.platformName() }, { flex: 3, background: "steelblue" }),
         ]
     }, { padding: 5, background: "skyblue" });
 });

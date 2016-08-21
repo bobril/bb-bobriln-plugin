@@ -1,6 +1,6 @@
 {
   "name": "bb-bobriln-plugin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Bobril-build plugin for Bobril Native",
   "main": "dist/index.js",
   "scripts": {
