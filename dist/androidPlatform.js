@@ -28,7 +28,7 @@ class AndroidPlatform {
         return Promise.resolve();
     }
     packageName() {
-        let pn = "com.bobril.native";
+        let pn = "com.bobril.bobriln";
         if (this.project.packageJsonBobril != null && this.project.packageJsonBobril["androidPackage"]) {
             pn = this.project.packageJsonBobril["androidPackage"];
         }

@@ -37,7 +37,7 @@ b.init(() => {
         },
         "bobril": {
             "title": "Test",
-            "androidPackage": "com.bobril.native"
+            "androidPackage": "com.bobril.bobriln"
         },
         "author": "",
         "license": "ISC"
