@@ -5,6 +5,7 @@ import { isEnabled } from './enabled';
 import * as dev from "./device";
 import * as deviceList from './deviceList';
 import { initCommand } from './initCommand';
+import { assetHandlerImage } from './assetHandlerImage';
 
 let first = true;
 
@@ -13,6 +14,11 @@ export function afterInteractiveCompile() {
         first = false;
         deviceList.detectDevices();
     }
+}
+
+export function handleAsset(name: string, shortenFileNameAddPath: (fn: string) => string, project: bb.IProject) {
+    if (!isEnabled()) return undefined;
+    return assetHandlerImage(name, shortenFileNameAddPath, project);
 }
 
 export function updateWatchPaths(paths: string[]) {

@@ -5,6 +5,7 @@ const enabled_1 = require('./enabled');
 const dev = require("./device");
 const deviceList = require('./deviceList');
 const initCommand_1 = require('./initCommand');
+const assetHandlerImage_1 = require('./assetHandlerImage');
 let first = true;
 function afterInteractiveCompile() {
     if (enabled_1.isEnabled() && first) {
@@ -13,6 +14,12 @@ function afterInteractiveCompile() {
     }
 }
 exports.afterInteractiveCompile = afterInteractiveCompile;
+function handleAsset(name, shortenFileNameAddPath, project) {
+    if (!enabled_1.isEnabled())
+        return undefined;
+    return assetHandlerImage_1.assetHandlerImage(name, shortenFileNameAddPath, project);
+}
+exports.handleAsset = handleAsset;
 function updateWatchPaths(paths) {
     paths.push("!/android/**");
 }
