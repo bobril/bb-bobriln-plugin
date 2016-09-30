@@ -17,7 +17,7 @@ class AndroidDevice {
     }
     checkStatus() {
         // somehow using spawn does not work with next command, luckily execFile works ok.
-        child_process.execFile(androidHome.getAdbPath(), ["-s", this.id, "reverse", "tcp:8080", "tcp:" + bb.interactivePort], (err) => {
+        child_process.execFile(androidHome.getAdbPath(), ["-s", this.id, "reverse", "tcp:8080", "tcp:" + bb.getInteractivePort()], (err) => {
             let online = err == null;
             setTimeout(() => this.checkStatus(), 5000);
             if (online === (this.status === dev.DeviceStatus.Online))

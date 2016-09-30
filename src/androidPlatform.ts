@@ -68,7 +68,7 @@ public final class BobrilnConfig {
         if (release) {
             let assetsDir = path.join(this.projectPlatformDir(), "app/src/main/assets");
             fs.emptyDirSync(assetsDir);
-            let compileProcess = bb.startCompileProcess(bb.curProjectDir);
+            let compileProcess = bb.startCompileProcess(bb.getCurProjectDir());
             prom = prom.then(() => compileProcess.refresh(null).then(() => {
                 let proj: bb.IProject = <any>{};
                 bb.presetReleaseProject(proj);

@@ -3,7 +3,7 @@ const child_process = require("child_process");
 const readline = require("readline");
 function spawnAsync(onLine, command, args, cwd, shell) {
     return new Promise((resolve, reject) => {
-        var proc = child_process.spawn(command, args, { cwd: cwd, shell: shell });
+        var proc = child_process.spawn(command, args, { cwd, shell });
         readline.createInterface({
             input: proc.stdout,
             terminal: false
