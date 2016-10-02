@@ -15,7 +15,7 @@ export function assetHandlerImage(name: string, shortenFileNameAddPath: (fn: str
     let dir = path.join(project.dir, path.dirname(name));
     let files = fs.readdirSync(dir);
     let mnameext = extractRx.exec(path.basename(name));
-    let matcher = new RegExp(escapeRegExp(mnameext[1]) + "(?:@(\\d+(?:\\.?\\d+)?)x)?\\." + escapeRegExp(mnameext[3]));
+    let matcher = new RegExp(escapeRegExp(mnameext[1]) + "(?:@(\\d+(?:\\.?\\d+)?)x)?\\." + escapeRegExp(mnameext[3]), "i");
     let width = 0;
     let height = 0;
     let was1 = false;
@@ -44,6 +44,9 @@ export function assetHandlerImage(name: string, shortenFileNameAddPath: (fn: str
             }
             densFiles.push([density, path.relative(project.dir, ff)]);
         }
+    }
+    if (densFiles.length === 0) {
+        return { _BBError: "Cannot find asset " + name };
     }
     densFiles.sort((a, b) => a[0] - b[0]);
     let result: (number | string)[] = [width, height];
