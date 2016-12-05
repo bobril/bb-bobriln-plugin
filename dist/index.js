@@ -21,7 +21,8 @@ function handleAsset(name, shortenFileNameAddPath, project) {
 }
 exports.handleAsset = handleAsset;
 function updateWatchPaths(paths) {
-    paths.push("!/android/**");
+    paths.push("!./android/**");
+    paths.push("!./node_modules/bobriln/android/**");
 }
 exports.updateWatchPaths = updateWatchPaths;
 function device2actionId(device) {
@@ -82,10 +83,12 @@ function invokeAction(id) {
             }
         }
         case "bn.justRunDebug": {
+            setConsoleLogger();
             let device = deviceList.deviceList.getSelected();
             if (device != null && device.status != dev.DeviceStatus.Online)
                 device = null;
             if (device != null) {
+                device.updateByProject(bb.getProject());
                 return device.justRunDebug();
             }
             return;
